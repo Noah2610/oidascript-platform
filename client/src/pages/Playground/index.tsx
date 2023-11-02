@@ -5,6 +5,8 @@ import { run as realRunOida } from "oidascript";
 import { Result } from "oidascript/result";
 import { LangError } from "oidascript/langError";
 
+import styles from "./playground.module.css";
+
 function runOida(code: string): Result<string, LangError> {
     const origLog = console.log;
 
@@ -54,7 +56,7 @@ export default function Playground() {
             <textarea value={output} readOnly />
 
             <Editor
-                className="editor"
+                className={styles.editor}
                 defaultValue={'zeig "Hallo Welt!" an!'}
                 onMount={(editor) => {
                     editorRef.current = editor;
