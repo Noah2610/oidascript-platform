@@ -8,6 +8,9 @@ export default function Navigation() {
                 <li>
                     <Link to="/playground">Playground</Link>
                 </li>
+                <li>
+                    <Link to="/register">Register</Link>
+                </li>
             </ul>
         </nav>
     );
