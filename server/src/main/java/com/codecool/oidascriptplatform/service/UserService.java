@@ -5,6 +5,7 @@ import com.codecool.oidascriptplatform.exception.RegisterUserException;
 import com.codecool.oidascriptplatform.model.User;
 import com.codecool.oidascriptplatform.repository.UserRepository;
 import com.codecool.oidascriptplatform.service.data.UserDetailsImpl;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,7 +22,6 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
@@ -34,7 +34,14 @@ public class UserService implements UserDetailsService {
         user.setUsername(userData.getUsername());
 
         user.setPasswordHash(passwordEncoder.encode(userData.getPassword()));
-        User savedUser = userRepository.save(user);
-        return user;
+
+        try {
+            User savedUser = userRepository.save(user);
+            return user;
+        } catch (DataIntegrityViolationException ex) {
+            throw new RegisterUserException("Please use a different username");
+        } catch (RuntimeException ex) {
+            throw new RegisterUserException();
+        }
     }
 }

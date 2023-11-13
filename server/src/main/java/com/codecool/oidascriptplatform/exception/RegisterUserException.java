@@ -1,7 +1,10 @@
 package com.codecool.oidascriptplatform.exception;
 
-public class RegisterUserException extends Exception {
+public class RegisterUserException extends RuntimeException {
+    public RegisterUserException(String msg) {
+        super(String.format("Couldn't register user: %s", msg));
+    }
     public RegisterUserException() {
-        super("asd");
+        super("Couldn't register user: Unknown error");
     }
 }
