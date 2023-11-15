@@ -2,6 +2,7 @@ package com.codecool.oidascriptplatform.service;
 
 import com.codecool.oidascriptplatform.controller.data.CreateUserRequestBody;
 import com.codecool.oidascriptplatform.exception.RegisterUserException;
+import com.codecool.oidascriptplatform.exception.SaveUserException;
 import com.codecool.oidascriptplatform.model.User;
 import com.codecool.oidascriptplatform.repository.UserRepository;
 import com.codecool.oidascriptplatform.service.data.UserDetailsImpl;
@@ -37,11 +38,11 @@ public class UserService implements UserDetailsService {
 
         try {
             User savedUser = userRepository.save(user);
-            return user;
+            return savedUser;
         } catch (DataIntegrityViolationException ex) {
             throw new RegisterUserException("Please use a different username");
         } catch (RuntimeException ex) {
-            throw new RegisterUserException();
+            throw new SaveUserException();
         }
     }
 }
