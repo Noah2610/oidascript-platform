@@ -1,6 +1,7 @@
 import { login } from "../../api";
-import LoginForm, { LoginData } from "../../components/LoginForm";
+import LoginForm from "../../components/LoginForm";
 import { useStore } from "../../store";
+import { LoginData } from "../../types";
 
 export default function Login() {
     const setUser = useStore(({ setUser }) => setUser);
