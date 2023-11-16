@@ -1,10 +1,14 @@
-import { FormEvent, useEffect, useState } from "react";
-import LoginForm, { LoginData } from "../../components/LoginForm";
+import { register } from "../../api";
+import LoginForm from "../../components/LoginForm";
+import { LoginData } from "../../types";
 
 export default function Register() {
     function onRegister(login: LoginData) {
-        // TODO
-        throw new Error("unimplemented: register");
+        register(login).then((result) =>
+            result.ok
+                ? console.info("[register ok]", result.ok)
+                : console.error("[register err]", result.err),
+        );
     }
 
     return (

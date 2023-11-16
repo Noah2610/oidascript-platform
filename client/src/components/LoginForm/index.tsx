@@ -1,14 +1,10 @@
 import { FormEvent, useEffect, useState } from "react";
+import { LoginData } from "../../types";
 
 import styles from "./loginForm.module.css";
 
 const MIN_USERNAME_LEN = 2;
 const MIN_PASSWORD_LEN = 6;
-
-export interface LoginData {
-    username: string;
-    password: string;
-}
 
 interface LoginFormProps {
     passwordConfirmation?: boolean;
