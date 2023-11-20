@@ -27,6 +27,11 @@ public class SecurityConfig {
             .authorizeHttpRequests((authorize) -> authorize
                     .requestMatchers("/users").permitAll()
                     .anyRequest().authenticated())
+                .oauth2ResourceServer((oauth2) -> {
+                    oauth2.jwt((jwtConfigurer) -> jwtConfigurer.decoder(jwtDecoder));
+                    oauth2.bearerTokenResolver(cookieTokenResolver);
+                })
+                .addFilterBefore(updateCookieFilter, BearerTokenAuthenticationFilter.class)
             .build();
     }
 

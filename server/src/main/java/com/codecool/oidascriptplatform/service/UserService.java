@@ -23,6 +23,10 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public User findUserByUsername(String username) {
+        userRepository.findByUsername(username).orElseThrow();
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
