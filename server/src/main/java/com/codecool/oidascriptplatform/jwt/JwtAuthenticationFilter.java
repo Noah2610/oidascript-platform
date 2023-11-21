@@ -1,37 +1,38 @@
-package com.codecool.oidascriptplatform;
+package com.codecool.oidascriptplatform.jwt;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.codecool.oidascriptplatform.model.User;
+import com.codecool.oidascriptplatform.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Date;
+import java.util.List;
 
+// TODO: Refactor authentication logic (create token, validate, store in context) into AuthenticationService?
+
+@Component
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
-    private final int expirationTimeMs;
-    private final String signSecret;
+    private final JwtEncoder jwtEncoder;
 
     public JwtAuthenticationFilter(
             AuthenticationManager authenticationManager,
-            @Value("${auth.token.expiration_time_ms}") int expirationTimeMs,
-            @Value("${auth.token.sign_secret}") String signSecret
+            JwtEncoder jwtEncoder
     ) {
+        super(authenticationManager);
         this.authenticationManager = authenticationManager;
-        this.expirationTimeMs = expirationTimeMs;
-        this.signSecret = signSecret;
+        this.jwtEncoder = jwtEncoder;
 
-        setFilterProcessesUrl("/sessions");
+        // TODO: do we need this?
+        // setFilterProcessesUrl("/sessions");
     }
 
     @Override
@@ -39,11 +40,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             HttpServletRequest req,
             HttpServletResponse res
     ) throws AuthenticationException {
-        User user;
+        UserDetails user;
 
         try {
             user = new ObjectMapper()
-                .readValue(req.getInputStream(), User.class);
+                .readValue(req.getInputStream(), UserDetailsImpl.class);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -51,7 +52,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         user.getUsername(),
-                        user.getPasswordHash()
+                        user.getPassword(),
+                        user.getAuthorities()
                 )
         );
     }
@@ -62,12 +64,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             HttpServletResponse res,
             FilterChain chain,
             Authentication auth
-    ) {
-        String token = JWT.create()
-                .withSubject(((User) auth.getPrincipal()).getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeMs))
-                .sign(Algorithm.HMAC512(signSecret));
-        String body = ((User) auth.getPrincipal()).getUsername() + " " + token;
+    ) throws IOException {
+        UserDetails user = (UserDetails) auth.getPrincipal();
+        String token = jwtEncoder.encode(user);
+        String body = user.getUsername() + " " + token;
         res.getWriter().write(body);
         res.getWriter().flush();
     }

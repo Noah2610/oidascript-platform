@@ -1,5 +1,8 @@
 package com.codecool.oidascriptplatform.controller;
 
+// TODO: refactor into generic `ControllerAdvice`
+
+import com.codecool.oidascriptplatform.exception.NotAuthenticatedException;
 import com.codecool.oidascriptplatform.exception.RegisterUserException;
 import com.codecool.oidascriptplatform.exception.SaveUserException;
 
@@ -22,6 +25,13 @@ public class UserControllerAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(SaveUserException.class)
     public String saveUserExceptionHandler(SaveUserException ex) {
+        return ex.getMessage();
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler(NotAuthenticatedException.class)
+    public String notAuthenticatedExceptionHandler(NotAuthenticatedException ex) {
         return ex.getMessage();
     }
 }

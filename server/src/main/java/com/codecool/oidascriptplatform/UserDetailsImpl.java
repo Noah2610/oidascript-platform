@@ -1,6 +1,7 @@
-package com.codecool.oidascriptplatform.service.data;
+package com.codecool.oidascriptplatform;
 
 import com.codecool.oidascriptplatform.model.User;
+import com.fasterxml.jackson.annotation.JsonValue;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
