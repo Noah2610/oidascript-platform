@@ -1,6 +1,7 @@
 package com.codecool.oidascriptplatform;
 
 import com.codecool.oidascriptplatform.model.User;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonValue;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import java.util.List;
 
 public class UserDetailsImpl implements UserDetails {
     private final String username;
+    @JsonAlias({ "password" })
     private final String passwordHash;
 
     public UserDetailsImpl(String username, String passwordHash) {

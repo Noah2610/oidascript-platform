@@ -1,10 +1,19 @@
 package com.codecool.oidascriptplatform.controller.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CreateSessionRequestBody {
     private final String username;
     private final String password;
 
-    public CreateSessionRequestBody(String username, String password) {
+    @JsonCreator
+    public CreateSessionRequestBody(
+            @JsonProperty(value = "username", required = true)
+            String username,
+            @JsonProperty(value = "password", required = true)
+            String password
+    ) {
         this.username = username;
         this.password = password;
     }

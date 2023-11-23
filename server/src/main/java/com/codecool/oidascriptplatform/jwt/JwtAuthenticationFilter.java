@@ -1,5 +1,6 @@
 package com.codecool.oidascriptplatform.jwt;
 
+import com.codecool.oidascriptplatform.AuthCookieManager;
 import com.codecool.oidascriptplatform.UserDetailsImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -14,7 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.List;
 
 // TODO: Refactor authentication logic (create token, validate, store in context) into AuthenticationService?
 
@@ -22,14 +22,16 @@ import java.util.List;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtEncoder jwtEncoder;
+    private final AuthCookieManager cookieManager;
 
     public JwtAuthenticationFilter(
             AuthenticationManager authenticationManager,
-            JwtEncoder jwtEncoder
-    ) {
+            JwtEncoder jwtEncoder,
+            AuthCookieManager authCookieManager) {
         super(authenticationManager);
         this.authenticationManager = authenticationManager;
         this.jwtEncoder = jwtEncoder;
+        this.cookieManager = authCookieManager;
 
         // TODO: do we need this?
         // setFilterProcessesUrl("/sessions");
@@ -65,8 +67,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             FilterChain chain,
             Authentication auth
     ) throws IOException {
-        UserDetails user = (UserDetails) auth.getPrincipal();
+        System.out.println("-------------------------");
+        System.out.println("SUCCESSFUL AUTHENTICATION");
+        System.out.println("-------------------------");
+
+        String username = (String) auth.getPrincipal();
+        String password = (String) auth.getCredentials();
+        UserDetails user = new UserDetailsImpl(username, password);
         String token = jwtEncoder.encode(user);
+
+        res.addCookie(cookieManager.newAuthCookie(token));
+
         String body = user.getUsername() + " " + token;
         res.getWriter().write(body);
         res.getWriter().flush();
