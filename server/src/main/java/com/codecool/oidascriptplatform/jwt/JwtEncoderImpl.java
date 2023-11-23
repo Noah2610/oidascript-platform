@@ -26,6 +26,8 @@ public class JwtEncoderImpl implements JwtEncoder {
     public String encode(UserDetails user) {
         return JWT.create()
                 .withSubject(user.getUsername())
+                // TODO: is this bad?
+                .withClaim("credentials", user.getPassword())
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeMs))
                 .sign(Algorithm.HMAC512(signSecret));

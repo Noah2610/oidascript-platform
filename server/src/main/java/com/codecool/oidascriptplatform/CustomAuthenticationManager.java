@@ -24,10 +24,27 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UserDetails user = userService.loadUserByUsername(authentication.getName());
-        if (passwordEncoder.matches(authentication.getCredentials().toString(), user.getPassword())) {
+        UserDetails user = userService.loadUserByUsername((String) authentication.getPrincipal());
+
+        Object credentials = authentication.getCredentials();
+
+        if (
+                credentials != null &&
+                passwordEncoder.matches(authentication.getCredentials().toString(), user.getPassword())
+        ) {
             return UsernamePasswordAuthenticationToken.authenticated(user.getUsername(), user.getPassword(), List.of());
         }
+
+        System.out.println("------------------");
+        System.out.println(" AuthenticatorManager.authenticate ");
+        System.out.println("name: " + authentication.getName());
+        System.out.println("principal: " + authentication.getPrincipal());
+        System.out.println("credentials: " + authentication.getCredentials().toString());
+        System.out.println("user name: " + user.getUsername());
+        System.out.println("user pass: " + user.getPassword());
+        System.out.println("matches: " + passwordEncoder.matches(authentication.getCredentials().toString(), user.getPassword()));
+        System.out.println("------------------");
+
         throw new BadCredentialsException("Invalid login");
     }
 }

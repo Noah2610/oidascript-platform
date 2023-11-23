@@ -1,13 +1,14 @@
 package com.codecool.oidascriptplatform.controller;
 
-import com.codecool.oidascriptplatform.UserDetailsImpl;
 import com.codecool.oidascriptplatform.controller.data.CreateSessionRequestBody;
 import com.codecool.oidascriptplatform.controller.data.CreateSessionResponseBody;
-import com.codecool.oidascriptplatform.exception.NotAuthenticatedException;
+import com.codecool.oidascriptplatform.model.User;
 import com.codecool.oidascriptplatform.service.SessionService;
+import com.codecool.oidascriptplatform.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,31 +16,41 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/sessions")
 public class SessionController {
     private final SessionService sessionService;
+    private final UserService userService;
 
-    public SessionController(SessionService sessionService) {
+    public SessionController(SessionService sessionService, UserService userService) {
         this.sessionService = sessionService;
+        this.userService = userService;
     }
 
     @GetMapping
-    public ResponseEntity<String> getSession(Authentication authentication) {
+    public String getSession(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
-            return new ResponseEntity("Not authenticated", HttpStatus.UNAUTHORIZED);
+            throw new InsufficientAuthenticationException("Not authenticated");
         }
 
-        return new ResponseEntity(authentication.getPrincipal(), HttpStatus.OK);
+        // TODO
+        return (String) authentication.getPrincipal();
     }
 
     @PostMapping
-    public CreateSessionResponseBody createSession(
-            HttpServletResponse res,
-            @RequestBody
-            CreateSessionRequestBody body
+    public User createSession(
+//            HttpServletResponse res,
+//            @RequestBody
+//            CreateSessionRequestBody body
+            Authentication authentication
     ) {
-        Authentication auth = sessionService.createSession(body, res);
-
-        if (auth == null) {
-            throw new NotAuthenticatedException("Invalid login");
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new InsufficientAuthenticationException("Not authenticated");
         }
-        return new CreateSessionResponseBody(auth.getName());
+
+        return userService.findUserByUsername(authentication.getName());
+
+//        Authentication auth = sessionService.createSession(body, res);
+//
+//        if (auth == null) {
+//            throw new NotAuthenticatedException("Invalid login");
+//        }
+//        return new CreateSessionResponseBody(auth.getName());
     }
 }

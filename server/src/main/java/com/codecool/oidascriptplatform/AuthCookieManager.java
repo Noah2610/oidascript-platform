@@ -23,6 +23,14 @@ public class AuthCookieManager {
     }
 
     public Cookie newAuthCookie(String value) {
-        return new Cookie(COOKIE_NAME, value);
+        Cookie cookie = new Cookie(COOKIE_NAME, value);
+        cookie.setPath("/");
+        return cookie;
+    }
+
+    public Cookie clearAuthCookie() {
+        Cookie cookie = new Cookie(COOKIE_NAME, "");
+        cookie.setMaxAge(0);
+        return cookie;
     }
 }
