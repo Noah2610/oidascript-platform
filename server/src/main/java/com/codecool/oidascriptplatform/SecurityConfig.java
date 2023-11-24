@@ -1,16 +1,22 @@
 package com.codecool.oidascriptplatform;
 
-import com.codecool.oidascriptplatform.jwt.JwtAuthenticationFilter;
 import com.codecool.oidascriptplatform.jwt.JwtEncoder;
 import com.codecool.oidascriptplatform.jwt.JwtRememberMeServices;
+import com.codecool.oidascriptplatform.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -26,23 +32,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-//    private final JwtAuthenticationFilter authenticationFilter;
-//    private final JwtAuthorizationFilter authorizationFilter;
-
-//    public SecurityConfig(
-//            JwtAuthenticationFilter authenticationFilter,
-//            JwtAuthorizationFilter authorizationFilter,
-//            CustomAuthenticationManager authenticationManager
-//    ) {
-//        this.authenticationFilter = authenticationFilter;
-//        this.authorizationFilter = authorizationFilter;
-//    }
-
     @Bean
     public SecurityFilterChain filterChain(
             HttpSecurity http,
-            AuthenticationManager authenticationManager,
-            RememberMeServices rememberMeServices
+            AuthenticationManager authenticationManager
     ) throws Exception {
         return http
                 .cors(withDefaults())
@@ -54,42 +47,51 @@ public class SecurityConfig {
 //                .addFilter(authorizationFilter)
                 .authenticationManager(authenticationManager)
                 .sessionManagement((sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .rememberMe(remember -> remember.rememberMeServices(rememberMeServices))
+//                .rememberMe(remember -> remember.rememberMeServices(rememberMeServices))
                 .build();
     }
 
     @Bean
-    public JwtAuthenticationFilter authenticationFilter(
+    public AuthenticationManager authenticationManager(
+            DaoAuthenticationProvider daoAuthenticationProvider,
+            JwtAuthenticationProvider jwtAuthenticationProvider
+    ) {
+        return new ProviderManager(daoAuthenticationProvider, jwtAuthenticationProvider);
+    }
+
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider(PasswordEncoder passwordEncoder, UserService userService) {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(passwordEncoder);
+        authenticationProvider.setUserDetailsService(userService);
+        return authenticationProvider;
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(JwtAuthenticationProvider jwtAuthenticationProvider) {
+        return jwtAuthenticationProvider;
+    }
+
+    @Bean
+    public AbstractAuthenticationProcessingFilter loginFilter(
             AuthenticationManager authenticationManager,
             JwtEncoder jwtEncoder,
-            AuthCookieManager authCookieManager,
-            RememberMeServices rememberMe
+            AuthCookieManager authCookieManager
     ) {
         RequestMatcher requestMatcher = new AndRequestMatcher(
                 new AntPathRequestMatcher("/sessions"),
                 request -> HttpMethod.POST.matches(request.getMethod())
         );
 
-        return new JwtAuthenticationFilter(
+        LoginFilter loginFilter = new LoginFilter(
                 requestMatcher,
-                authenticationManager,
-                jwtEncoder,
-                authCookieManager,
-                rememberMe
-        );
-    }
-
-    @Bean
-    public JwtRememberMeServices rememberMeServices(
-            AuthenticationManager authenticationManager,
-            JwtEncoder jwtEncoder,
-            AuthCookieManager authCookieManager
-    ) {
-        return new JwtRememberMeServices(
                 authenticationManager,
                 jwtEncoder,
                 authCookieManager
         );
+
+        loginFilter.setAuthenticationSuccessHandler((request, response, authentication) -> {});
+
+        return loginFilter;
     }
 
     @Bean

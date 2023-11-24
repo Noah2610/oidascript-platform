@@ -1,16 +1,36 @@
 package com.codecool.oidascriptplatform.jwt;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
 public class JwtTokenAuthentication implements Authentication {
-    // TODO: username
     private final String token;
+    @Nullable
+    private final String username;
 
-    public JwtTokenAuthentication(String token) {
+    private boolean isAuthenticated;
+
+    private JwtTokenAuthentication(String token, String username, boolean isAuthenticated) {
         this.token = token;
+        this.username = username;
+        this.isAuthenticated = isAuthenticated;
+    }
+    public JwtTokenAuthentication(String token, String username) {
+        this(token, username, false);
+    }
+    public JwtTokenAuthentication(String token) {
+        this(token, null, false);
+    }
+
+    public static JwtTokenAuthentication authenticated(String token, String username) {
+        return new JwtTokenAuthentication(token, username, true);
+    }
+    public static JwtTokenAuthentication unauthenticated(String token) {
+        return new JwtTokenAuthentication(token, null, false);
     }
 
     @Override
@@ -29,22 +49,23 @@ public class JwtTokenAuthentication implements Authentication {
     }
 
     @Override
+    @Nullable
     public Object getPrincipal() {
-        return null;
+        return username;
     }
 
     @Override
     public boolean isAuthenticated() {
-        return false;
+        return isAuthenticated;
     }
 
     @Override
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
+        this.isAuthenticated = isAuthenticated;
     }
 
     @Override
     public String getName() {
-        return null;
+        return (String) this.getPrincipal();
     }
 }

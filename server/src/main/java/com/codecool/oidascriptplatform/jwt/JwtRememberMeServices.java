@@ -86,8 +86,7 @@ public class JwtRememberMeServices implements RememberMeServices {
     }
 
     private void validateCookie(HttpServletResponse res, Authentication auth) {
-        UserDetails user = new UserDetailsImpl((String) auth.getPrincipal(), (String) auth.getCredentials());
-        String token = jwtEncoder.encode(user);
+        String token = jwtEncoder.encode((String) auth.getPrincipal());
         Cookie cookie = cookieManager.newAuthCookie(token);
         res.addCookie(cookie);
     }

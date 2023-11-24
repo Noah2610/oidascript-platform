@@ -36,9 +36,9 @@ public class SessionService {
         );
 
         UserDetails user = new UserDetailsImpl(login.getUsername(), login.getPassword());
-        String token = jwtEncoder.encode(user);
+//        String token = jwtEncoder.encode(user);
         //String body = user.getUsername() + " " + token;
-        res.addCookie(cookieManager.newAuthCookie(token));
+//        res.addCookie(cookieManager.newAuthCookie(token));
 
         return authentication;
     }

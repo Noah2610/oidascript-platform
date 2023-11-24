@@ -23,11 +23,9 @@ public class JwtEncoderImpl implements JwtEncoder {
     }
 
     @Override
-    public String encode(UserDetails user) {
+    public String encode(String username) {
         return JWT.create()
-                .withSubject(user.getUsername())
-                // TODO: is this bad?
-                .withClaim("credentials", user.getPassword())
+                .withSubject(username)
                 .withIssuedAt(new Date())
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationTimeMs))
                 .sign(Algorithm.HMAC512(signSecret));

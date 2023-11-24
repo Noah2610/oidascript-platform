@@ -9,6 +9,6 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 public interface JwtEncoder {
-    String encode(UserDetails user);
+    String encode(String username);
     DecodedJWT decode(String token);
 }
