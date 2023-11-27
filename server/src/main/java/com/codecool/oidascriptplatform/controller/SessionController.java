@@ -28,35 +28,18 @@ public class SessionController {
     }
 
     @GetMapping
-    public String getSession(Authentication authentication) {
+    public User getSession(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new InsufficientAuthenticationException("Not authenticated");
         }
-
-        // TODO
-        return (String) authentication.getPrincipal();
+        return userService.findUserByUsername(authentication.getName());
     }
 
     @PostMapping
-    public User createSession(
-//            HttpServletResponse res,
-//            @RequestBody
-//            CreateSessionRequestBody body
-            Authentication authentication
-    ) {
-        log.info("-------------------\nHEREHRERRHERHERHEHAR\n------------------------");
-
+    public User createSession(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new InsufficientAuthenticationException("Not authenticated");
         }
-
         return userService.findUserByUsername(authentication.getName());
-
-//        Authentication auth = sessionService.createSession(body, res);
-//
-//        if (auth == null) {
-//            throw new NotAuthenticatedException("Invalid login");
-//        }
-//        return new CreateSessionResponseBody(auth.getName());
     }
 }
