@@ -1,5 +1,7 @@
 package com.codecool.oidascriptplatform.jwt;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.codecool.oidascriptplatform.AuthCookieManager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -45,12 +47,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String cookie = cookieOpt.get();
-        Authentication auth = JwtTokenAuthentication.unauthenticated(cookie);
 
         Authentication authenticatedAuth;
 
         try {
+            Authentication auth = JwtTokenAuthentication.unauthenticated(cookie);
             authenticatedAuth = authenticationManager.authenticate(auth);
+        } catch (JWTVerificationException ex) {
+            chain.doFilter(request, response);
+            return;
         } catch (AuthenticationException ex) {
             response.addCookie(cookieManager.clearAuthCookie());
             throw ex;

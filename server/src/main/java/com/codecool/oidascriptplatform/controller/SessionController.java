@@ -1,13 +1,10 @@
 package com.codecool.oidascriptplatform.controller;
 
-import com.codecool.oidascriptplatform.controller.data.CreateSessionRequestBody;
-import com.codecool.oidascriptplatform.controller.data.CreateSessionResponseBody;
+import com.codecool.oidascriptplatform.AuthCookieManager;
 import com.codecool.oidascriptplatform.model.User;
 import com.codecool.oidascriptplatform.service.SessionService;
 import com.codecool.oidascriptplatform.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -19,12 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class SessionController {
     private final SessionService sessionService;
     private final UserService userService;
-    private final Log log;
+    private final AuthCookieManager cookieManager;
 
-    public SessionController(SessionService sessionService, UserService userService) {
+    public SessionController(SessionService sessionService, UserService userService, AuthCookieManager cookieManager) {
         this.sessionService = sessionService;
         this.userService = userService;
-        this.log = LogFactory.getLog(SessionController.class);
+        this.cookieManager = cookieManager;
     }
 
     @GetMapping
@@ -41,5 +38,16 @@ public class SessionController {
             throw new InsufficientAuthenticationException("Not authenticated");
         }
         return userService.findUserByUsername(authentication.getName());
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> deleteSession(Authentication authentication, HttpServletResponse response) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return new ResponseEntity("Not logged in", HttpStatus.OK);
+        }
+
+        response.addCookie(cookieManager.clearAuthCookie());
+
+        return new ResponseEntity("Logged out", HttpStatus.OK);
     }
 }

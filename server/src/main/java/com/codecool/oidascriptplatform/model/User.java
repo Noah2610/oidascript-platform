@@ -3,6 +3,8 @@ package com.codecool.oidascriptplatform.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -10,11 +12,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonIgnore
     private Long id;
+
     @Column(unique = true, nullable = false)
     private String username;
+
     @Column(nullable = false)
     @JsonIgnore
     private String passwordHash;
+
+    @OneToMany(mappedBy = "script_details")
+    private List<ScriptDetails> scriptDetails;
 
     public Long getId() {
         return id;
