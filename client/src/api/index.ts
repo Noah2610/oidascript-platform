@@ -1,4 +1,4 @@
-import { LoginData, Result, User } from "../types";
+import { LoginData, Result, ScriptDetails } from "../types";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -70,6 +70,26 @@ export async function getSession(): Promise<
 
     return {
         err: await newResponseError(res, "text", "Failed to fetch session"),
+    };
+}
+
+export async function logout(): Promise<Result<string, ResponseError<string>>> {
+    const res = await fetchApi("/sessions", { method: "DELETE" });
+    if (res.ok) {
+        return { ok: await res.text() };
+    }
+    return { err: await newResponseError(res, "text", "Failed to logout") };
+}
+
+export async function getUserScripts(): Promise<
+    Result<ScriptDetails[], ResponseError<string>>
+> {
+    const res = await fetchApi(`/scripts`);
+    if (res.ok) {
+        return { ok: await res.json() };
+    }
+    return {
+        err: await newResponseError(res, "text", "Failed to get user scripts"),
     };
 }
 

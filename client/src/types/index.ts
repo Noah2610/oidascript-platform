@@ -12,3 +12,8 @@ export type Result<T, E = string> =
           ok?: undefined;
           err: E;
       };
+
+export interface ScriptDetails {
+    id: number;
+    name: string;
+}

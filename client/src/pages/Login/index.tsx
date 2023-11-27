@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { login } from "../../api";
+import Error from "../../components/Error";
 import LoginForm from "../../components/LoginForm";
 import { useStore } from "../../store";
 import { LoginData } from "../../types";
@@ -24,7 +25,7 @@ export default function Login() {
         <>
             <h1>Login User</h1>
 
-            {error && <div>{error}</div>}
+            {error && <Error>{error}</Error>}
 
             <LoginForm onSubmit={onLogin} submitLabel="Login" />
         </>
