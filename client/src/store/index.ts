@@ -12,6 +12,5 @@ export interface Store {
 
 export const useStore = create<Store>((set, get) => ({
     user: null,
-
     setUser: (user) => set({ user }),
 }));

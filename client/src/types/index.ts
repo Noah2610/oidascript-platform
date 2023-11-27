@@ -3,10 +3,12 @@ export interface LoginData {
     password: string;
 }
 
-export type Result<T, E = string> = {
-    ok: T,
-    err?: undefined,
-} | {
-    ok?: undefined,
-    err: E,
-}
+export type Result<T, E = string> =
+    | {
+          ok: T;
+          err?: undefined;
+      }
+    | {
+          ok?: undefined;
+          err: E;
+      };
