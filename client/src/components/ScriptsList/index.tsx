@@ -6,6 +6,14 @@ interface ScriptsListProps {
 }
 
 export default function ScriptsList({ scripts }: ScriptsListProps) {
+    if (scripts.length === 0) {
+        return (
+            <p>
+                No scripts, <Link to="/scripts/new">create new script</Link>
+            </p>
+        );
+    }
+
     return (
         <ul>
             {scripts.map((script, i) => (

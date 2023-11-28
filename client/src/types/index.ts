@@ -17,3 +17,9 @@ export interface ScriptDetails {
     id: number;
     name: string;
 }
+
+export type ScriptDetailsWithBody = ScriptDetails & {
+    body: string;
+};
+
+export type OmitId<T> = Omit<T, "id">;

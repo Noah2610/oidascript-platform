@@ -13,7 +13,7 @@ export default function Scripts() {
     useEffect(() => {
         getUserScripts().then((result) => {
             if (result.ok) {
-                setScripts(result.ok);
+                setScripts(result.ok.scriptDetails);
             } else {
                 console.error("[getUserScripts error]", result.err);
                 setError(result.err.message);

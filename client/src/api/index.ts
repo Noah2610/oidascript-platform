@@ -1,4 +1,10 @@
-import { LoginData, Result, ScriptDetails } from "../types";
+import {
+    LoginData,
+    OmitId,
+    Result,
+    ScriptDetails,
+    ScriptDetailsWithBody,
+} from "../types";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -23,6 +29,10 @@ export interface LoginResponseBody {
 
 export interface GetSessionResponseBody {
     username: string;
+}
+
+export interface GetUserScriptsResponseBody {
+    scriptDetails: ScriptDetails[];
 }
 
 export async function register(
@@ -82,14 +92,45 @@ export async function logout(): Promise<Result<string, ResponseError<string>>> {
 }
 
 export async function getUserScripts(): Promise<
-    Result<ScriptDetails[], ResponseError<string>>
+    Result<GetUserScriptsResponseBody, ResponseError<string>>
 > {
-    const res = await fetchApi(`/scripts`);
+    const res = await fetchApi("/scripts");
     if (res.ok) {
         return { ok: await res.json() };
     }
     return {
         err: await newResponseError(res, "text", "Failed to get user scripts"),
+    };
+}
+
+export async function createScript(
+    script: OmitId<ScriptDetailsWithBody>,
+): Promise<Result<ScriptDetails, ResponseError<string>>> {
+    const res = await fetchApi("/scripts", {
+        method: "POST",
+        body: JSON.stringify(script),
+    });
+    if (res.ok) {
+        return { ok: await res.json() };
+    }
+    return {
+        err: await newResponseError(res, "text", "Failed to create new script"),
+    };
+}
+
+export async function updateScript(
+    id: number,
+    script: OmitId<ScriptDetailsWithBody>,
+): Promise<Result<ScriptDetails, ResponseError<string>>> {
+    const res = await fetchApi(`/scripts/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(script),
+    });
+    if (res.ok) {
+        return { ok: await res.json() };
+    }
+    return {
+        err: await newResponseError(res, "text", "Failed to update script"),
     };
 }
 
