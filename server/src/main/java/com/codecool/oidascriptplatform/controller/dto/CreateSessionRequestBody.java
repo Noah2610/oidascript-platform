@@ -1,4 +1,4 @@
-package com.codecool.oidascriptplatform.controller.data;
+package com.codecool.oidascriptplatform.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

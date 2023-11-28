@@ -1,6 +1,6 @@
 package com.codecool.oidascriptplatform.controller;
 
-import com.codecool.oidascriptplatform.controller.data.CreateUserRequestBody;
+import com.codecool.oidascriptplatform.controller.dto.CreateUserRequestBody;
 import com.codecool.oidascriptplatform.model.User;
 import com.codecool.oidascriptplatform.service.UserService;
 
@@ -17,11 +17,6 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
-    }
-
-    @GetMapping
-    public String debug() {
-        return "Hello World";
     }
 
     @PostMapping

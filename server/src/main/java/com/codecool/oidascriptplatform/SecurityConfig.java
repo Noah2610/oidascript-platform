@@ -41,8 +41,11 @@ public class SecurityConfig {
                 .cors(withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/users", "/sessions").permitAll()
-                        .anyRequest().authenticated())
+//                    .requestMatchers("/scripts").authenticated()
+                    .anyRequest().permitAll()
+//                        .requestMatchers("/users", "/sessions").permitAll()
+//                        .anyRequest().authenticated()
+                )
 //                .addFilter(authenticationFilter)
 //                .addFilter(authorizationFilter)
                 .authenticationManager(authenticationManager)

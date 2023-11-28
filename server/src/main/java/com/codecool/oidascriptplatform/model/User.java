@@ -20,7 +20,7 @@ public class User {
     @JsonIgnore
     private String passwordHash;
 
-    @OneToMany(mappedBy = "script_details")
+    @OneToMany(mappedBy = "user")
     private List<ScriptDetails> scriptDetails;
 
     public Long getId() {

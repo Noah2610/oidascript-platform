@@ -2,7 +2,7 @@ package com.codecool.oidascriptplatform.service;
 
 import com.codecool.oidascriptplatform.AuthCookieManager;
 import com.codecool.oidascriptplatform.UserDetailsImpl;
-import com.codecool.oidascriptplatform.controller.data.CreateSessionRequestBody;
+import com.codecool.oidascriptplatform.controller.dto.CreateSessionRequestBody;
 import com.codecool.oidascriptplatform.jwt.JwtEncoder;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
