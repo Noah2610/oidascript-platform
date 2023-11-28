@@ -103,6 +103,18 @@ export async function getUserScripts(): Promise<
     };
 }
 
+export async function getScript(
+    id: number,
+): Promise<Result<ScriptDetailsWithBody, ResponseError<string>>> {
+    const res = await fetchApi(`/scripts/${id}`);
+    if (res.ok) {
+        return { ok: await res.json() };
+    }
+    return {
+        err: await newResponseError(res, "text", "Failed to get user script"),
+    };
+}
+
 export async function createScript(
     script: OmitId<ScriptDetailsWithBody>,
 ): Promise<Result<ScriptDetails, ResponseError<string>>> {
