@@ -3,6 +3,7 @@ package com.codecool.oidascriptplatform.service;
 import com.codecool.oidascriptplatform.controller.dto.CreateScriptRequestBody;
 import com.codecool.oidascriptplatform.model.ScriptDetails;
 import com.codecool.oidascriptplatform.model.User;
+import com.codecool.oidascriptplatform.repository.ScriptBodyRepository;
 import com.codecool.oidascriptplatform.repository.ScriptDetailsRepository;
 import com.codecool.oidascriptplatform.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -14,10 +15,12 @@ import java.util.Optional;
 @Service
 public class ScriptService {
     private final ScriptDetailsRepository scriptDetailsRepository;
+    private final ScriptBodyRepository scriptBodyRepository;
     private final UserRepository userRepository;
 
-    public ScriptService(ScriptDetailsRepository scriptDetailsRepository, UserRepository userRepository) {
+    public ScriptService(ScriptDetailsRepository scriptDetailsRepository, ScriptBodyRepository scriptBodyRepository, UserRepository userRepository) {
         this.scriptDetailsRepository = scriptDetailsRepository;
+        this.scriptBodyRepository = scriptBodyRepository;
         this.userRepository = userRepository;
     }
 

@@ -1,20 +1,20 @@
 package com.codecool.oidascriptplatform.model;
 
 public class ScriptBody {
-    private String path;
+    private String id;
     private String body;
 
-    public ScriptBody(String path, String body) {
-        this.path = path;
+    public ScriptBody(String id, String body) {
+        this.id = id;
         this.body = body;
     }
 
-    public String getPath() {
-        return path;
+    public String getId() {
+        return id;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getBody() {
