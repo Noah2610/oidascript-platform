@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getUserScripts } from "../../api";
 import Error from "../../components/Error";
 import Loading from "../../components/Loading";
@@ -28,6 +29,8 @@ export default function Scripts() {
             {error && <Error>{error}</Error>}
 
             {scripts ? <ScriptsList scripts={scripts} /> : <Loading />}
+
+            <Link to="/scripts/new">New Script</Link>
         </>
     );
 }

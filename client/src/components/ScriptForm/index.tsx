@@ -27,6 +27,8 @@ export default function ScriptForm({
         }
     };
 
+    const isValid = name.trim().length > 0;
+
     return (
         <form action="#" onSubmit={handleSubmit}>
             <label>
@@ -40,7 +42,9 @@ export default function ScriptForm({
 
             <OidaScriptEditor body={script?.body} editorRef={editorRef} />
 
-            <button type="submit">{submitLabel}</button>
+            <button type="submit" disabled={!isValid}>
+                {submitLabel}
+            </button>
         </form>
     );
 }
