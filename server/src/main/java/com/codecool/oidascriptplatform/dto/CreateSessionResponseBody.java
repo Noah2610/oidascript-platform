@@ -1,4 +1,4 @@
-package com.codecool.oidascriptplatform.controller.dto;
+package com.codecool.oidascriptplatform.dto;
 
 public class CreateSessionResponseBody {
     private final String username;

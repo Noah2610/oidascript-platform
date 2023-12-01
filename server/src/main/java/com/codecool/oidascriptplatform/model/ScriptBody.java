@@ -1,6 +1,12 @@
 package com.codecool.oidascriptplatform.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+// NOTE: `ScriptBody` is not saved in database, instead in files managed by `ScriptBodyRepository`.
+@Entity
 public class ScriptBody {
+    @Id
     private String id;
     private String body;
 

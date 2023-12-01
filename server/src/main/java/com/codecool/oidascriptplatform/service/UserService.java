@@ -1,6 +1,6 @@
 package com.codecool.oidascriptplatform.service;
 
-import com.codecool.oidascriptplatform.controller.dto.CreateUserRequestBody;
+import com.codecool.oidascriptplatform.dto.CreateUserRequestBody;
 import com.codecool.oidascriptplatform.exception.RegisterUserException;
 import com.codecool.oidascriptplatform.exception.SaveUserException;
 import com.codecool.oidascriptplatform.model.User;

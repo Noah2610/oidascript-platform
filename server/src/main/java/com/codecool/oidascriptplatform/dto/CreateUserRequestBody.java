@@ -1,4 +1,4 @@
-package com.codecool.oidascriptplatform.controller.dto;
+package com.codecool.oidascriptplatform.dto;
 
 public class CreateUserRequestBody {
     private String username;

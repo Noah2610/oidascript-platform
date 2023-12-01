@@ -1,10 +1,9 @@
 package com.codecool.oidascriptplatform.controller;
 
-import com.codecool.oidascriptplatform.controller.dto.CreateUserRequestBody;
+import com.codecool.oidascriptplatform.dto.CreateUserRequestBody;
 import com.codecool.oidascriptplatform.model.User;
 import com.codecool.oidascriptplatform.service.UserService;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

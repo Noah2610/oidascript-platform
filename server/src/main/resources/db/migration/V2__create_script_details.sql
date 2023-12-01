@@ -3,5 +3,5 @@ create table script_details (
     name varchar(255) not null,
     description text,
     user_id bigserial references users(id),
-    script_path varchar(255)
+    body_id varchar(255)
 );

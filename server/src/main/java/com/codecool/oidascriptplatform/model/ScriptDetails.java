@@ -21,6 +21,9 @@ public class ScriptDetails {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "body_id", nullable = false)
+    private String bodyId;
+
     public Long getId() {
         return id;
     }
@@ -52,5 +55,13 @@ public class ScriptDetails {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getBodyId() {
+        return bodyId;
+    }
+
+    public void setBodyId(String bodyId) {
+        this.bodyId = bodyId;
     }
 }

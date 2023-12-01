@@ -4,11 +4,11 @@ import com.codecool.oidascriptplatform.exception.*;
 import com.codecool.oidascriptplatform.model.ScriptBody;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,7 +68,7 @@ public class ScriptBodyRepositoryImpl implements ScriptBodyRepository {
     private Optional<String> readFile(Path path) {
         try {
             return Optional.of(Files.readString(path, ENCODING));
-        } catch (FileNotFoundException ex) {
+        } catch (NoSuchFileException ex) {
             return Optional.empty();
         } catch (IOException ex) {
             throw new ReadFileException(path, ex);
