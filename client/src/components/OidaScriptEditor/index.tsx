@@ -1,11 +1,16 @@
 import { Editor } from "@monaco-editor/react";
-import { editor as editorTypes } from "monaco-editor";
+import { editor as editorModule } from "monaco-editor";
 import { useRef, useState } from "react";
 import { run as realRunOida } from "oidascript";
 import { Result } from "oidascript/result";
 import { LangError } from "oidascript/langError";
+import { createMonacoLanguage } from "./createMonacoLanguage";
 
 import styles from "./editor.module.css";
+
+window.addEventListener("load", () => {
+    createMonacoLanguage();
+});
 
 function runOida(code: string): Result<string, LangError> {
     const origLog = console.log;
@@ -30,7 +35,7 @@ function runOida(code: string): Result<string, LangError> {
 interface OidaScriptEditorProps {
     body?: string;
     editorRef?: React.MutableRefObject<
-        editorTypes.IStandaloneCodeEditor | undefined
+        editorModule.IStandaloneCodeEditor | undefined
     >;
 }
 
@@ -40,7 +45,7 @@ export default function OidaScriptEditor({
 }: OidaScriptEditorProps) {
     body ??= 'zeig "Hallo Welt!" an!';
 
-    const editorRef = useRef<editorTypes.IStandaloneCodeEditor>();
+    const editorRef = useRef<editorModule.IStandaloneCodeEditor>();
     const [output, setOutput] = useState("");
 
     function onRun() {
@@ -66,6 +71,8 @@ export default function OidaScriptEditor({
             <textarea value={output} readOnly />
 
             <Editor
+                language="oidascript"
+                theme="oidascriptTheme"
                 className={styles.editor}
                 defaultValue={body}
                 onMount={(editor) => {
