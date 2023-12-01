@@ -40,19 +40,19 @@ export default function EditScript() {
         return <Error>Expected script ID in URL path</Error>;
     }
 
-    if (!script) {
-        return <Loading />;
-    }
-
     return (
         <>
             {error && <Error>{error}</Error>}
             {message && <Notif>{message}</Notif>}
-            <ScriptForm
-                script={script}
-                onSubmit={onSubmit}
-                submitLabel="Save"
-            />
+            {script ? (
+                <ScriptForm
+                    script={script}
+                    onSubmit={onSubmit}
+                    submitLabel="Save"
+                />
+            ) : (
+                <Loading />
+            )}
         </>
     );
 }

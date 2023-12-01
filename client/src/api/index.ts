@@ -117,7 +117,7 @@ export async function getScript(
 
 export async function createScript(
     script: OmitId<ScriptDetailsWithBody>,
-): Promise<Result<ScriptDetails, ResponseError<string>>> {
+): Promise<Result<ScriptDetailsWithBody, ResponseError<string>>> {
     const res = await fetchApi("/scripts", {
         method: "POST",
         body: JSON.stringify(script),
@@ -143,6 +143,18 @@ export async function updateScript(
     }
     return {
         err: await newResponseError(res, "text", "Failed to update script"),
+    };
+}
+
+export async function deleteScript(
+    id: number,
+): Promise<Result<string, ResponseError<string>>> {
+    const res = await fetchApi(`/scripts/${id}`, { method: "DELETE" });
+    if (res.ok) {
+        return { ok: await res.text() };
+    }
+    return {
+        err: await newResponseError(res, "text", "Failed to delete script"),
     };
 }
 

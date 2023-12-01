@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ScriptDetails } from "../../types";
+import ScriptListItem from "./ScriptListItem";
 
 interface ScriptsListProps {
     scripts: ScriptDetails[];
@@ -18,7 +19,7 @@ export default function ScriptsList({ scripts }: ScriptsListProps) {
         <ul>
             {scripts.map((script, i) => (
                 <li key={i}>
-                    <Link to={`/scripts/${script.id}`}>{script.name}</Link>
+                    <ScriptListItem script={script} />
                 </li>
             ))}
         </ul>
