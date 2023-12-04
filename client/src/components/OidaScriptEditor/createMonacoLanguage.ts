@@ -6,8 +6,16 @@ export function createMonacoLanguage() {
         monaco.languages.setMonarchTokensProvider("oidascript", {
             tokenizer: {
                 root: [
-                    [/die\s+Funktion\s+.+? macht/, "functionDefinition"],
-                    [/(der|die|das)\s+.+? ist /, "variableDefinition"],
+                    [/\bdie\s+Funktion\b/, "functionDefinition"],
+                    [/\bmacht\b/, "functionDefinition"],
+                    [/\bund endet hier\b/, "functionDefinition"],
+                    [/\b(der|die|das)\b/, "variableDefinition"],
+                    [/ ist /, "variableDefinitionAssign"],
+                    [/"[^"]+"/, "string"],
+                    ["!", "exclaim"],
+                    [/\bgib\s/, "return"],
+                    [/\szurück\b/, "return"],
+                    [/\bnix\b/, "null"],
                 ],
             },
         });
@@ -17,11 +25,31 @@ export function createMonacoLanguage() {
             rules: [
                 {
                     token: "functionDefinition",
-                    foreground: "ff0000",
+                    foreground: "ff005f",
                 },
                 {
                     token: "variableDefinition",
-                    foreground: "0000ff",
+                    foreground: "5ed7ff",
+                },
+                {
+                    token: "variableDefinitionAssign",
+                    foreground: "5ed7ff",
+                },
+                {
+                    token: "string",
+                    foreground: "d4d787",
+                },
+                {
+                    token: "exclaim",
+                    foreground: "6c6c6c",
+                },
+                {
+                    token: "return",
+                    foreground: "ff005f",
+                },
+                {
+                    token: "null",
+                    foreground: "ff005f",
                 },
             ],
             colors: {},
