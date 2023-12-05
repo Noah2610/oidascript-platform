@@ -4,7 +4,11 @@ import { useRef, useState } from "react";
 import { run as realRunOida } from "oidascript";
 import { Result } from "oidascript/result";
 import { LangError } from "oidascript/langError";
-import { createMonacoLanguage } from "./createMonacoLanguage";
+import {
+    createMonacoLanguage,
+    setupEditorActions,
+    setupVim,
+} from "./createMonacoLanguage";
 
 import styles from "./editor.module.css";
 
@@ -48,6 +52,8 @@ export default function OidaScriptEditor({
     const editorRef = useRef<editorModule.IStandaloneCodeEditor>();
     const [output, setOutput] = useState("");
 
+    const vimStatusRef = useRef<HTMLElement | null>(null);
+
     function onRun() {
         const editor = editorRef.current;
         if (!editor) return;
@@ -60,6 +66,11 @@ export default function OidaScriptEditor({
         } else {
             setOutput(result.getError()!.display());
         }
+    }
+
+    function handleSetupVim() {
+        if (!editorRef.current || !vimStatusRef.current) return;
+        setupVim(editorRef.current, vimStatusRef.current);
     }
 
     return (
@@ -80,8 +91,14 @@ export default function OidaScriptEditor({
                     if (editorRefProp) {
                         editorRefProp.current = editor;
                     }
+                    setupEditorActions(editor, onRun);
+                    handleSetupVim();
                 }}
             />
+
+            <code
+                ref={(el) => (vimStatusRef.current = el) && handleSetupVim()}
+            ></code>
         </>
     );
 }
